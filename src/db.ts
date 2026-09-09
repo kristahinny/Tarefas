@@ -37,6 +37,7 @@ export interface ChecklistItem {
 
 export interface RotinaItem {
   id: number;
+  usuario_id: number;
   dia_semana: number;
   horario_inicio: string | null;
   horario_fim: string | null;
@@ -108,18 +109,23 @@ export async function getMateria(db: D1Database, materiaId: number, usuarioId: n
   return row ?? null;
 }
 
-export async function listRotinaPorDia(db: D1Database, diaSemana: number): Promise<RotinaItem[]> {
+export async function listRotinaPorDia(db: D1Database, usuarioId: number, diaSemana: number): Promise<RotinaItem[]> {
   const { results } = await db
-    .prepare("SELECT * FROM rotina WHERE dia_semana = ? ORDER BY ordem")
-    .bind(diaSemana)
+    .prepare("SELECT * FROM rotina WHERE usuario_id = ? AND dia_semana = ? ORDER BY ordem")
+    .bind(usuarioId, diaSemana)
     .all<RotinaItem>();
   return results;
 }
 
-export async function listRotinaPorDiaETipo(db: D1Database, diaSemana: number, tipo: string): Promise<RotinaItem[]> {
+export async function listRotinaPorDiaETipo(
+  db: D1Database,
+  usuarioId: number,
+  diaSemana: number,
+  tipo: string
+): Promise<RotinaItem[]> {
   const { results } = await db
-    .prepare("SELECT * FROM rotina WHERE dia_semana = ? AND tipo = ?")
-    .bind(diaSemana, tipo)
+    .prepare("SELECT * FROM rotina WHERE usuario_id = ? AND dia_semana = ? AND tipo = ?")
+    .bind(usuarioId, diaSemana, tipo)
     .all<RotinaItem>();
   return results;
 }

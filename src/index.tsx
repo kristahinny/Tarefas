@@ -93,11 +93,11 @@ app.get("/", requireAuth, async (c) => {
 
   const itens = await db.listChecklistDoDia(c.env.DB, usuario.id, hoje);
   const diaSemana = svc.diaSemanaDe(hoje);
-  const rotinasHojeList = await db.listRotinaPorDia(c.env.DB, diaSemana);
+  const rotinasHojeList = await db.listRotinaPorDia(c.env.DB, usuario.id, diaSemana);
   const rotinasHoje = new Map(rotinasHojeList.map((r) => [r.atividade, r]));
 
   const { concluidos, total, pct } = await svc.progressoDia(c.env.DB, usuario.id, hoje);
-  const metaMin = await svc.metaMinutosDia(c.env.DB, diaSemana);
+  const metaMin = await svc.metaMinutosDia(c.env.DB, usuario.id, diaSemana);
   const estudadoMin = await db.minutosEstudadosNoDia(c.env.DB, usuario.id, hoje);
   const itemEstudo = itens.find((i) => i.tipo === "estudo") ?? null;
   void estudadoMin;
@@ -179,7 +179,7 @@ app.get("/perfil", requireAuth, async (c) => {
   const seq = await svc.sequenciaDias(c.env.DB, usuario.id);
   const questoes = await db.totalQuestoes(c.env.DB, usuario.id);
   const estudadoHoje = await db.minutosEstudadosNoDia(c.env.DB, usuario.id, hoje);
-  const metaHoje = await svc.metaMinutosDia(c.env.DB, svc.diaSemanaDe(hoje));
+  const metaHoje = await svc.metaMinutosDia(c.env.DB, usuario.id, svc.diaSemanaDe(hoje));
 
   const flash = consumeFlash(c);
   return c.html(
@@ -284,7 +284,7 @@ app.post("/registrar", requireAuth, async (c) => {
   });
 
   await svc.garantirChecklistDoDia(c.env.DB, usuario.id, dataTexto);
-  const meta = await svc.metaMinutosDia(c.env.DB, svc.diaSemanaDe(dataTexto));
+  const meta = await svc.metaMinutosDia(c.env.DB, usuario.id, svc.diaSemanaDe(dataTexto));
   const estudado = await db.minutosEstudadosNoDia(c.env.DB, usuario.id, dataTexto);
   if (meta && estudado >= meta) {
     await db.marcarChecklistEstudoConcluido(c.env.DB, usuario.id, dataTexto);

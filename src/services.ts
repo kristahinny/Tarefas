@@ -48,8 +48,8 @@ export function formatarDataBRCurta(dataISO: string): string {
   return `${d}/${m}`;
 }
 
-export async function metaMinutosDia(database: D1Database, diaSemana: number): Promise<number> {
-  const rotinas = await db.listRotinaPorDiaETipo(database, diaSemana, "estudo");
+export async function metaMinutosDia(database: D1Database, usuarioId: number, diaSemana: number): Promise<number> {
+  const rotinas = await db.listRotinaPorDiaETipo(database, usuarioId, diaSemana, "estudo");
   return rotinas.reduce((acc, r) => acc + db.duracaoRotina(r), 0);
 }
 
@@ -58,7 +58,7 @@ export async function garantirChecklistDoDia(database: D1Database, usuarioId: nu
   if (existentes > 0) return;
 
   const diaSemana = diaSemanaDe(dataRef);
-  const rotinas = await db.listRotinaPorDia(database, diaSemana);
+  const rotinas = await db.listRotinaPorDia(database, usuarioId, diaSemana);
   for (const r of rotinas) {
     await db.criarChecklistItem(database, usuarioId, dataRef, r.atividade, r.tipo, r.ordem);
   }
@@ -103,7 +103,7 @@ export async function resumoSemana(database: D1Database, usuarioId: number, data
 
   for (let i = 0; i < 7; i++) {
     const d = somaDias(seg, i);
-    const meta = await metaMinutosDia(database, i);
+    const meta = await metaMinutosDia(database, usuarioId, i);
     const estudado = await db.minutosEstudadosNoDia(database, usuarioId, d);
     const concluido = meta > 0 && estudado >= meta;
     dias.push({ data: d, nome: DIAS_SEMANA[i], metaMinutos: meta, estudadoMinutos: estudado, concluido, ehHoje: d === hoje });
@@ -126,7 +126,7 @@ export async function sequenciaDias(database: D1Database, usuarioId: number): Pr
   let dias = 0;
   let d = hojeISO();
   while (true) {
-    const meta = await metaMinutosDia(database, diaSemanaDe(d));
+    const meta = await metaMinutosDia(database, usuarioId, diaSemanaDe(d));
     const estudado = await db.minutosEstudadosNoDia(database, usuarioId, d);
     if (meta > 0 && estudado >= meta) {
       dias += 1;
