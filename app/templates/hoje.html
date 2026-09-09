@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block title %}Hoje · Meu Plano TCE-GO{% endblock %}
+
+{% block content %}
+{% set icones = {
+  "acordar": "⏰", "personal": "🏋️", "estudo": "📚",
+  "trabalho": "💼", "almoco": "🍽️", "descanso": "🌙", "geral": "☐"
+} %}
+
+<div class="topbar">
+  <p class="greeting">Olá, {{ current_user.nome.split(' ')[0] }} 👋</p>
+  <h1 class="day-title">{{ nome_dia }}</h1>
+</div>
+
+<div class="card-goal">
+  <div class="num">{{ meta_label }}</div>
+  <div class="txt"><b>Meta de hoje</b>{% if meta_min %}de estudo focado{% else %}dia de descanso — aproveite!{% endif %}</div>
+</div>
+
+<div class="section-label">Rotina de hoje</div>
+{% if itens %}
+<ul class="checklist">
+  {% for item in itens %}
+    {% set rotina = rotinas_hoje.get(item.atividade) %}
+    <li class="checklist-item {% if item.concluido %}done{% endif %}" data-id="{{ item.id }}">
+      <div class="checkbox">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 6L9 17l-5-5"/>
+        </svg>
+      </div>
+      <span class="tag-icon">{{ icones.get(item.tipo, "☐") }}</span>
+      <div class="info">
+        <div class="titulo">{{ item.atividade }}</div>
+        {% if rotina and rotina.horario_label %}
+          <div class="horario">{{ rotina.horario_label }}</div>
+        {% endif %}
+      </div>
+    </li>
+  {% endfor %}
+</ul>
+{% else %}
+<div class="empty-state">
+  <div class="emoji">🌤️</div>
+  Nenhuma atividade cadastrada para hoje.
+</div>
+{% endif %}
+
+<div class="section-label" style="margin-top:6px;">Progresso do dia</div>
+<div class="progress-wrap">
+  <div class="labels">
+    <span data-progress-count>{{ concluidos }}/{{ total }}</span>
+    <span class="pct" data-progress-pct>{{ pct }}%</span>
+  </div>
+  <div class="progress-bar">
+    <div class="fill" data-progress-fill style="width:{{ pct }}%;"></div>
+  </div>
+</div>
+
+{% if item_estudo %}
+<div class="btn-block-wrap">
+  <button class="btn {% if item_estudo.concluido %}btn-outline{% else %}btn-gold{% endif %}" id="btn-concluir-estudo" data-id="{{ item_estudo.id }}">
+    {% if item_estudo.concluido %}✓ ESTUDO CONCLUÍDO{% else %}CONCLUIR ESTUDO{% endif %}
+  </button>
+</div>
+{% endif %}
+
+<div class="btn-block-wrap" style="margin-top:-8px;">
+  <a class="btn btn-primary" href="{{ url_for('estudo.registrar') }}">➕ REGISTRAR ESTUDO</a>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  const btnConcluir = document.getElementById("btn-concluir-estudo");
+  if (btnConcluir) {
+    btnConcluir.addEventListener("click", async () => {
+      const id = btnConcluir.dataset.id;
+      await fetch(`/checklist/${id}/toggle`, { method: "POST" });
+      window.location.reload();
+    });
+  }
+</script>
+{% endblock %}

@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}Registrar Estudo · Meu Plano TCE-GO{% endblock %}
+
+{% block content %}
+<div class="topbar">
+  <p class="greeting">Novo registro</p>
+  <h1 class="day-title">Registrar Estudo</h1>
+</div>
+
+<form method="POST" action="{{ url_for('estudo.registrar') }}">
+  <div class="form-group">
+    <label>Matéria</label>
+    <select class="form-control" name="materia_id" id="select-materia">
+      <option value="">— selecionar —</option>
+      {% for m in materias %}
+        <option value="{{ m.id }}">{{ m.nome }}</option>
+      {% endfor %}
+      <option value="">Outra (digitar abaixo)</option>
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label>Ou digite a matéria</label>
+    <input class="form-control" type="text" name="materia_nome_livre" placeholder="Ex: Direito Administrativo">
+  </div>
+
+  <div class="form-group">
+    <label>Tempo estudado</label>
+    <input class="form-control" type="text" name="tempo" placeholder="Ex: 1h30" required>
+  </div>
+
+  <div class="form-group">
+    <label>Tipo</label>
+    <div class="type-pills">
+      {% for t in tipos %}
+        <label class="type-pill {% if loop.first %}selected{% endif %}">
+          <input type="radio" name="tipo" value="{{ t }}" {% if loop.first %}checked{% endif %}>
+          {{ t }}
+        </label>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label>Observação (opcional)</label>
+    <input class="form-control" type="text" name="observacao" placeholder="Ex: revisei os erros da semana">
+  </div>
+
+  <input type="hidden" name="data" value="{{ hoje_data.isoformat() }}">
+
+  <div class="btn-block-wrap">
+    <button class="btn btn-primary" type="submit">SALVAR</button>
+  </div>
+</form>
+{% endblock %}

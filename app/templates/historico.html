@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Histórico · Meu Plano TCE-GO{% endblock %}
+
+{% block content %}
+<div class="topbar">
+  <p class="greeting">Seus últimos registros</p>
+  <h1 class="day-title">Histórico</h1>
+</div>
+
+{% if grupos %}
+  {% for chave, registros in grupos.items() %}
+    <div class="hist-group-title">{{ chave }}</div>
+    {% for r in registros %}
+      <div class="hist-item">
+        <span class="tipo-dot"></span>
+        <div class="info">
+          <div class="materia">{{ r.materia_display }}</div>
+          <div class="meta">{{ r.tipo }}{% if r.observacao %} · {{ r.observacao }}{% endif %}</div>
+        </div>
+        <div class="tempo">{{ fmt_minutos(r.minutos) }}</div>
+      </div>
+    {% endfor %}
+  {% endfor %}
+{% else %}
+  <div class="empty-state">
+    <div class="emoji">🗂️</div>
+    Nenhum estudo registrado ainda.
+  </div>
+{% endif %}
+{% endblock %}

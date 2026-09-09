@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}Matérias · Meu Plano TCE-GO{% endblock %}
+
+{% block content %}
+<div class="topbar">
+  <p class="greeting">Organize seus estudos</p>
+  <h1 class="day-title">Matérias</h1>
+</div>
+
+<form class="add-form" method="POST" action="{{ url_for('materias.nova') }}">
+  <input type="text" name="nome" placeholder="Nova matéria..." required>
+  <button type="submit">+</button>
+</form>
+
+{% if materias %}
+  {% for m in materias %}
+    <div class="materia-row">
+      <span class="nome">{{ m.nome }}</span>
+      <div class="acoes">
+        <button class="icon-btn" title="Editar" onclick="editarMateria({{ m.id }}, '{{ m.nome|e }}')">✏️</button>
+        <form method="POST" action="{{ url_for('materias.excluir', materia_id=m.id) }}" style="display:inline;" onsubmit="return confirm('Excluir esta matéria?');">
+          <button class="icon-btn danger" type="submit" title="Excluir">🗑️</button>
+        </form>
+      </div>
+    </div>
+  {% endfor %}
+{% else %}
+  <div class="empty-state">
+    <div class="emoji">📚</div>
+    Nenhuma matéria cadastrada ainda.
+  </div>
+{% endif %}
+
+<!-- form de edição escondido, reaproveitado via JS -->
+<form id="form-editar" method="POST" style="display:none;">
+  <input type="text" id="input-editar-nome" name="nome">
+</form>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  function editarMateria(id, nomeAtual) {
+    const novoNome = prompt("Editar matéria:", nomeAtual);
+    if (novoNome && novoNome.trim() !== "") {
+      const form = document.getElementById("form-editar");
+      form.action = `/materias/${id}/editar`;
+      document.getElementById("input-editar-nome").value = novoNome.trim();
+      form.submit();
+    }
+  }
+</script>
+{% endblock %}

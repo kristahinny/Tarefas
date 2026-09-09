@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Minha Semana · Meu Plano TCE-GO{% endblock %}
+
+{% block content %}
+<div class="topbar">
+  <p class="greeting">{{ resumo.inicio.strftime('%d/%m') }} — {{ resumo.fim.strftime('%d/%m') }}</p>
+  <h1 class="day-title">Minha Semana</h1>
+</div>
+
+<div class="section-label" style="margin-top:8px;">Dias da semana</div>
+{% for dia in resumo.dias %}
+  <div class="week-day-card {% if dia.eh_hoje %}today{% endif %}">
+    <div class="dia-nome">{{ dia.nome }}</div>
+    <div class="dia-meta">
+      {% if dia.meta_minutos %}
+        {{ fmt_minutos(dia.estudado_minutos) }} / {{ fmt_minutos(dia.meta_minutos) }}
+      {% else %}
+        Descanso
+      {% endif %}
+    </div>
+    {% if dia.meta_minutos %}
+      {% if dia.concluido %}
+        <span class="status-pill ok">✓ concluído</span>
+      {% else %}
+        <span class="status-pill pend">pendente</span>
+      {% endif %}
+    {% endif %}
+  </div>
+{% endfor %}
+
+<div class="week-summary">
+  <div class="top">
+    <span class="label">Meta semanal</span>
+    <span class="value">{{ fmt_minutos(resumo.total_estudado) }} / {{ fmt_minutos(resumo.total_meta) }}</span>
+  </div>
+  <div class="progress-bar">
+    <div class="fill" style="width:{{ resumo.pct }}%;"></div>
+  </div>
+  <div class="pct-line">{{ resumo.pct }}% da meta semanal</div>
+</div>
+{% endblock %}
