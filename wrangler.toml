@@ -1,4 +1,4 @@
-name = "meu-plano-tce-go"
+name = "tarefas"
 main = "src/index.tsx"
 compatibility_date = "2025-01-09"
 compatibility_flags = ["nodejs_compat"]
@@ -9,5 +9,5 @@ binding = "ASSETS"
 
 [[d1_databases]]
 binding = "DB"
-database_name = "plano-tce-go"
-database_id = "REPLACE_WITH_YOUR_D1_DATABASE_ID"
+database_name = "tarefas-db"
+database_id = "4b56b771-06e8-42b9-84ad-8e452fa9c041"
