@@ -1,10 +1,13 @@
 // Toggle de checklist sem recarregar a página
+const checklistPendentes = new Set();
+
 document.addEventListener("click", async (e) => {
   const item = e.target.closest(".checklist-item[data-id]");
   if (!item) return;
 
   const id = item.dataset.id;
-  const wasDone = item.classList.contains("done");
+  if (checklistPendentes.has(id)) return; // ignora cliques repetidos enquanto a requisição está em andamento
+  checklistPendentes.add(id);
 
   // feedback imediato (otimista)
   item.classList.toggle("done");
@@ -24,6 +27,8 @@ document.addEventListener("click", async (e) => {
   } catch (err) {
     // reverte em caso de erro de rede
     item.classList.toggle("done");
+  } finally {
+    checklistPendentes.delete(id);
   }
 });
 

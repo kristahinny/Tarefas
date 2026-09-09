@@ -104,9 +104,14 @@ export const HojeView = ({ primeiroNome, nomeDia, metaLabel, metaMin, itens, rot
       const btnConcluir = document.getElementById("btn-concluir-estudo");
       if (btnConcluir) {
         btnConcluir.addEventListener("click", async () => {
+          if (btnConcluir.disabled) return; // evita duplo toque disparar dois toggles
+          btnConcluir.disabled = true;
           const id = btnConcluir.dataset.id;
-          await fetch(\`/checklist/\${id}/toggle\`, { method: "POST" });
-          window.location.reload();
+          try {
+            await fetch(\`/checklist/\${id}/toggle\`, { method: "POST" });
+          } finally {
+            window.location.reload();
+          }
         });
       }
     `,
