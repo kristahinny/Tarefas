@@ -1,0 +1,13 @@
+name = "meu-plano-tce-go"
+main = "src/index.tsx"
+compatibility_date = "2025-01-09"
+compatibility_flags = ["nodejs_compat"]
+
+[assets]
+directory = "./public"
+binding = "ASSETS"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "plano-tce-go"
+database_id = "REPLACE_WITH_YOUR_D1_DATABASE_ID"

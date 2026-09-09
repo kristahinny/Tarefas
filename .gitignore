@@ -3,3 +3,9 @@ __pycache__/
 *.pyc
 instance/*.db
 .DS_Store
+
+# Node / Cloudflare Workers
+node_modules/
+.wrangler/
+.dev.vars
+dist/

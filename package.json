@@ -1,0 +1,23 @@
+{
+  "name": "meu-plano-tce-go",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "db:migrate:local": "wrangler d1 execute plano-tce-go --local --file=./migrations/0001_schema.sql",
+    "db:seed:local": "wrangler d1 execute plano-tce-go --local --file=./migrations/0002_seed.sql",
+    "db:migrate:remote": "wrangler d1 execute plano-tce-go --remote --file=./migrations/0001_schema.sql",
+    "db:seed:remote": "wrangler d1 execute plano-tce-go --remote --file=./migrations/0002_seed.sql",
+    "hash-password": "node scripts/hash-password.mjs"
+  },
+  "dependencies": {
+    "hono": "^4.6.14"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^5.20260908.1",
+    "typescript": "^5.7.2",
+    "wrangler": "^4.130.0"
+  }
+}
