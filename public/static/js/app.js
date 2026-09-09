@@ -1,3 +1,10 @@
+// Registra o service worker (necessário para o app ser instalável como PWA)
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("/sw.js").catch(() => {});
+  });
+}
+
 // Toggle de checklist sem recarregar a página
 const checklistPendentes = new Set();
 

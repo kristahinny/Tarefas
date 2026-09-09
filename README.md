@@ -63,6 +63,16 @@ npm run deploy
 
 O Wrangler vai te dar a URL pública (`https://meu-plano-tce-go.<sua-conta>.workers.dev`).
 
+## Instalar como app (PWA)
+
+O site é um Progressive Web App — dá pra instalar no celular sem loja de aplicativos:
+
+**Android (Chrome):** abra o link, toque no menu (⋮) e em "Instalar app" (ou "Adicionar à tela inicial"). Um banner de instalação também pode aparecer sozinho.
+
+**iPhone (Safari):** abra o link, toque no ícone de compartilhar (□↑) e em "Adicionar à Tela de Início".
+
+O app fica com ícone próprio, abre em tela cheia (sem barra do navegador) e funciona como um app instalado normalmente.
+
 ## Rodando localmente
 
 ```bash
